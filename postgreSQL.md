@@ -40,6 +40,10 @@
 ```
 SELECT * FROM название_таблицы;
 ```
+`SELECT` - выбрать строки из таблицы
+`FROM` - источник данных
+`WHERE` - условие
+
 ## Создание
 ```
 CREATE TABLE название
@@ -56,16 +60,27 @@ CREATE TABLE название
 
 # Типы
 
-### Целочисленные
-- smallint, integer, bigint
+## I Целочисленные
+- smallint
+-  integer
+-   bigint
 ### C Фиксированной точностью знаков
 - numeric, decimal.
 ```
 numeric(кол-во цифр в числе, кол-во цифр после запятой)
 ```
 ### С плавающей точкой
-- real, double, float
-### Типы "дата/время"
+- real
+- double
+- float
+
+## II Символьные
+n - максимальное количество символов
+- character(n) | дополняет оставшиеся символы пробелами //char
+- character varying(n) | не дополняет оставшиеся символы пробелами //varchar
+- text
+- 
+## III Типы "дата/время"
 - date(yyyy-mm-dd)
 ```
 SELECT 'Sep 12, 2016'::date;
@@ -73,7 +88,8 @@ SELECT 'Sep 12, 2016'::date;
 ```
 SELECT '21:15:(опционально секунды)'::time;
 ```
-### Логический тип boolean
+## IV Логический тип boolean
 Истина: TRUE, 't','true', 'y', 'yes', 'on', '1'.
+
 Ложь: FALSE, 'f', 'false', 'n', 'no', 'off', '0'.
 
