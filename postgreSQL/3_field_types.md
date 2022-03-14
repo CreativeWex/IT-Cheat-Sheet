@@ -112,3 +112,42 @@ UPDATE pilots
 SET schedule[ 1 ] = 2, schedule[ 2 ] = 3
 WHERE pilot_name = 'Petr';
 ```
+---
+
+<br>
+
+## VI. JSON
+
+Существует 2 типа - json и `jsonb`, различющиеся в основном, в быстродействии
+
+json - быстрая вставка строк, медленное последующее обращение, сохраняет порядок следования ключей. jsonb противоположен.
+
+```
+CREATE TABLE pilot_hobbies
+(
+    pilot_name text,
+    hobbies jsonb
+);
+
+INSERT INTO pilot_hobbies
+    VALUES ( 'Ivan',
+'{ "sports": [ "ôóòáîë", "ïëàâàíèå" ],
+"home_lib": true, "trips": 3
+}'::jsonb
+),
+( 'Petr',
+'{ "sports": [ "òåííèñ", "ïëàâàíèå" ],
+"home_lib": true, "trips": 2
+}'::jsonb
+),
+( 'Pavel',
+'{ "sports": [ "ïëàâàíèå" ],
+"home_lib": false, "trips": 4
+}'::jsonb
+),
+( 'Boris',
+'{ "sports": [ "ôóòáîë", "ïëàâàíèå", "òåííèñ" ],
+"home_lib": true, "trips": 0
+}'::jsonb
+);
+```
