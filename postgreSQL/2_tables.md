@@ -63,9 +63,9 @@ ALTER TABLE products RENAME COLUMN старое_название TO новое_�
 
 Добавление ограничения
 ```
-ALTER TABLE products ADD CHECK (name <> '');
-ALTER TABLE products ADD CONSTRAINT some_name UNIQUE (столбец);
-ALTER TABLE products ADD FOREIGN KEY (product_group_id)
+ALTER TABLE название_таблицы ADD CHECK (name <> '');
+ALTER TABLE название_таблицы ADD CONSTRAINT some_name UNIQUE (столбец);
+ALTER TABLE название_таблицы ADD FOREIGN KEY (product_group_id)
     REFERENCES product_groups;
 ```
 Чтобы добавить ограничение NOT NULL, которое нельзя записать в виде ограничения таблицы:
