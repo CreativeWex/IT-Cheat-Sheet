@@ -56,6 +56,10 @@ ALTER TABLE products DROP COLUMN название;
 ```
 ALTER TABLE products RENAME COLUMN старое_название TO новое_название;
 ```
+Изменение типа данных столбца
+```
+ALTER TABLE название_таблицы ALTER COLUMN стобец TYPE тип(макс кол-во символов для ввода);
+```
 <br>
 
 ## Ограничения
