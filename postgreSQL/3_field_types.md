@@ -3,6 +3,9 @@
 - smallint
 - integer
 - bigint
+
+Автоматическая нумерация `integer primary key generated always as identity`
+
 ### C фиксированной точностью знаков
 - numeric
 - decimal.
