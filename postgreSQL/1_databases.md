@@ -23,3 +23,9 @@
 `\l` - все доступные БД
 
 `\c test` - переключение на БД
+
+<br>
+
+### Документация
+
+https://postgrespro.ru/docs/postgrespro/9.6/app-psql
