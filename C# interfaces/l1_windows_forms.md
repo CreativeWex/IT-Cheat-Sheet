@@ -109,32 +109,34 @@ private void button1_Click(object sender, EventArgs e)
 Для `tbA` задаем обработчик события `KeyPress`
 
 ```
-if (e.KeyChar >= '0' && e.KeyChar <= '9')
-    return;
+private void tbA_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar >= '0' && e.KeyChar <= '9')
+                return;
 
-if (e.KeyChar == '.') e.KeyChar = ',';
+            if (e.KeyChar == '.')
+                e.KeyChar = ',';
 
-if (e.KeyChar == ',')
-{
-    if (((sender as TextBox).Text.IndexOf(',') != -1) || ((sender as TextBox).Text.Length) == 0))
-        e.Handled = true; // Данное событие обработано (не пропускаем событие дальше)
-    return;
-}
+            if (e.KeyChar == ',')
+            {
+                if ((sender as TextBox).Text.IndexOf(',') != -1 || (sender as TextBox).Text.Length == 0)
+                    e.Handled = true; // Данное событие обработано (не пропускаем событие дальше)
+                return;
+            }
 
-if ((e.KeyChar == '+') || (e.KeyChar == '-'))
-{
-    if (((sender as TextBox).Text.IndexOf('+') != -1) ||
-        ((sender as TextBox).Text.IndexOf('-') != -1)
-        ((sender as TextBox).Text.Length > 0))
-        e.Handled = true;
-    return;
-}
+            if ((e.KeyChar == '+') || (e.KeyChar == '-'))
+            {
+                if (((sender as TextBox).Text.IndexOf('+') != -1) || ((sender as TextBox).Text.IndexOf('-') != -1) || ((sender as TextBox).Text.Length > 0))
+                    e.Handled = true;
+                return;
+            }
 
-if(Char.IsControl(e.KeyChar))
-    return;
+            if (Char.IsControl(e.KeyChar))
+                return;
 
-e.Handled = true;
-return;
+            e.Handled = true;
+            return;
+        }
 ```
 
 Для `tbB` подключить обработчик событий `tbA_KeyPress` (выбрать из выпадающего меню)
