@@ -140,3 +140,33 @@ private void tbA_KeyPress(object sender, KeyPressEventArgs e)
 ```
 
 Для `tbB` подключить обработчик событий `tbA_KeyPress` (выбрать из выпадающего меню)
+```
+private void tbB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar >= '0' && e.KeyChar <= '9')
+                return;
+
+            if (e.KeyChar == '.')
+                e.KeyChar = ',';
+
+            if (e.KeyChar == ',')
+            {
+                if ((sender as TextBox).Text.IndexOf(',') != -1 || (sender as TextBox).Text.Length == 0)
+                    e.Handled = true; // Данное событие обработано (не пропускаем событие дальше)
+                return;
+            }
+
+            if ((e.KeyChar == '+') || (e.KeyChar == '-'))
+            {
+                if (((sender as TextBox).Text.IndexOf('+') != -1) || ((sender as TextBox).Text.IndexOf('-') != -1) || ((sender as TextBox).Text.Length > 0))
+                    e.Handled = true;
+                return;
+            }
+
+            if (Char.IsControl(e.KeyChar))
+                return;
+
+            e.Handled = true;
+            return;
+        }
+```
