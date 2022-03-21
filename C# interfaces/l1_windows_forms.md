@@ -91,6 +91,8 @@ private void button1_Click(object sender, EventArgs e)
                 MessageBox.Show("Проверьте исходные данные", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error); // Другие Виды окон Warning, Information, Error
             }
             tbA.Focus(); // Переводит курсор на элемент. (Делает элемент активным)
+            tbA.Clear();
+            tbB.Clear();
         }
 ```
 <br>
