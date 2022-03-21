@@ -145,5 +145,6 @@ private void tbA_TextChanged(object sender, EventArgs e)
         {
             if (tbA.Text != "" && tbB.Text != "")
                 button1.Enabled = true;
+            else button1.Enabled = false;
         }
 ```
