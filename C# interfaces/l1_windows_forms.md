@@ -93,17 +93,6 @@ private void button1_Click(object sender, EventArgs e)
             tbA.Focus(); // Переводит курсор на элемент. (Делает элемент активным)
         }
 ```
-
-Дополнительные ф-ии программы:
-~ в поля редактирования возможен только ввод чисел; ~
-~ заменить введеный разделитель "точка" на "запятую"; ~
-~ предотвратить ввод второго разделителя; ~
-~ знаки "+" и "-" должны вводиться только перед числом; ~
-~ запятая не может быть первым символом; ~
-~ разрешть работу клавиш управления (Enter, Backspace и др.); ~
-~ при нажатии "Enter" должен активироваться следующий компонент (поле ввода, кнопка); ~
-- кнопка "button1" должна быть доступна только если все поля заполнены.
-
 <br>
 
 Для `tbA` задаем обработчик события `KeyPress`
@@ -148,4 +137,13 @@ private void tbA_KeyDown(object sender, KeyEventArgs e)
             if (e.KeyCode == Keys.Enter)
                 SelectNextControl(ActiveControl, true, true, true, true);
 }
+```
+
+Обработчик событий TextChanged для tbA и tbB
+```
+private void tbA_TextChanged(object sender, EventArgs e)
+        {
+            if (tbA.Text != "" && tbB.Text != "")
+                button1.Enabled = true;
+        }
 ```
