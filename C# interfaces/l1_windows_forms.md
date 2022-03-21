@@ -101,7 +101,7 @@ private void button1_Click(object sender, EventArgs e)
 - знаки "+" и "-" должны вводиться только перед числом;
 - запятая не может быть первым символом;
 - разрешть работу клавиш управления (Enter, Backspace и др.);
-- при нажатии "Enter" должен активироваться следующий компонент (оле ввода, кнопка);
+- при нажатии "Enter" должен активироваться следующий компонент (поле ввода, кнопка);
 - кнопка "button1" должна быть доступна только если все поля заполнены.
 
 <br>
@@ -140,3 +140,12 @@ private void tbA_KeyPress(object sender, KeyPressEventArgs e)
 ```
 
 Для `tbB` подключить обработчик событий `tbA_KeyPress` (выбрать из выпадающего меню)
+
+Нажатие "Enter", свойство KeyDown:
+```
+private void tbA_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                SelectNextControl(ActiveControl, true, true, true, true);
+        }
+```
