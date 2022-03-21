@@ -144,8 +144,8 @@ private void tbA_KeyPress(object sender, KeyPressEventArgs e)
 Нажатие "Enter", свойство KeyDown:
 ```
 private void tbA_KeyDown(object sender, KeyEventArgs e)
-        {
+{
             if (e.KeyCode == Keys.Enter)
                 SelectNextControl(ActiveControl, true, true, true, true);
-        }
+}
 ```
