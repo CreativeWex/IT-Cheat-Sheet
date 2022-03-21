@@ -40,7 +40,7 @@ y= <
 - Text - Протокол работы
 
 **label6**
-- Name - lbЗ
+- Name - lbP
 - BorderStyle - Fixed3D
 - AutoSize - False
 
@@ -70,28 +70,28 @@ button1 - Click
 ## Код кнопки
 
 ```
-private void button1_Click(object sender, EventArgs e) //sender - кто вызвал событие, e - сообщение о событии
-{
-    try
-    {
-        double a = Convert.ToDouble(tbA.Text);
-        double b = Convert.ToDouble(tbB.Text);
-        double y;
+private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double a = Convert.ToDouble(tbA.Text);
+                double b = Convert.ToDouble(tbB.Text);
+                double y;
 
-        if (a * b< 5)
-            y = a - 2 * b;
-        else
-            y = Math.Sqrt(a * b);
-        
-        lbY.Text = y.ToString("n"); // Формат n - numeric - компиллятор сам определят тип (int, double) | ToString("0.000n")
-        lbP.Text = lbP.Text + "A = " + lbA.Text + "  B = " + lbB.Text + "  Y = " + lbY.Text + "\r\n"
-    }
-    catch
-    {
-        MessageBox.Show("Проверьте исходные данные", "Ошибка ввода" MessageBoxButtons.OK,MessageBoxIcon.Error) // Другие Виды окон Warning, Information, Error
-    }
-    tbA.Focus(); // Переводит курсор на элемент. (Делает элемент активным)
-}
+                if (a * b < 5)
+                    y = a - 2 * b;
+                else
+                    y = Math.Sqrt(a * b);
+
+                lbY.Text = y.ToString("n"); // Формат n - numeric - компиллятор сам определят тип (int, double) | ToString("0.000n")
+                lbP.Text = lbP.Text + "A = " + tbA.Text + "  B = " + tbB.Text + "  Y = " + lbY.Text + "\r\n";
+            }
+            catch
+            {
+                MessageBox.Show("Проверьте исходные данные", "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Error); // Другие Виды окон Warning, Information, Error
+            }
+            tbA.Focus(); // Переводит курсор на элемент. (Делает элемент активным)
+        }
 ```
 
 Дополнительные ф-ии программы:
