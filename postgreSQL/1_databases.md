@@ -2,6 +2,8 @@
 ***Смена кодировки***
 ```
 \! chcp 1251
+\set PROMPT1 %n@%/%R%#
+\set PROMPT2 :PROMPT1
 ```
 
 <br>
