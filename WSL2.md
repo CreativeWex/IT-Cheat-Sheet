@@ -14,3 +14,4 @@ cd /mnt/c/Users/<username>
 
 ```
 ln -s /mnt/c/Users/<username> win_home
+```
