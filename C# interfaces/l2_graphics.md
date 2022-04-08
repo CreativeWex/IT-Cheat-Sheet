@@ -81,3 +81,58 @@ a.Width = 2 // 2px
 
 Point[] p = new Point`[5]`;
 p[0].X = 10; p[0].Y = 10;
+
+## Прямоугольник
+
+`DrawRectangle(aPen, x, y, w, h);`
+
+Закрашенный прямоугольник
+
+`FillRectangle(Brushes.Blue, x, y, w, h);`
+
+Содание объекта-прямоугольника
+```
+Rectangle aRect(10, 10, 60, 30);
+DrawRectangle(aPen, aReact);
+        или
+FillRectangle(Brushes.Green, aRect);
+```
+
+Фрагмент метода для обработчика событий Paint
+```
+Rectangle aRect = new Rectangle(10, 10, 60, 30);
+e.Graphics.FillRectangle(Brushes.ForestGreen, aRect);
+
+aRect.X = 100; aRect.Y = 10;
+e.Graphics.FillRectangle(Brushes.Gold, aRect);
+e.Graphics.DrawRectangle(Pens.Red, aReact);
+```
+## Точка
+`e.Graphics.FillRectangle(Brushes.Red, x, y, 1, 1);`
+
+## Многоугольник
+
+`DrawPolygon(ручка, массив_точек);`
+`FillPolygon((Brushes.Green, aRect);`
+
+## Эллипс и Окружность
+
+`DrawEllipse(aPen, x, y, w, h);`
+
+## Дуга
+`DrawArc(aPen, aRect, startAngle, sweepAngle);`, Величины углов в градусах ( + по часовой, - против)
+
+`DrawPie(aPen, aRect, startAngle, sweepAngle);`
+
+## Вывод текста
+
+`DrawString(текст, шрифт, Brush, x, y);`
+Шрифт - Font aFont = new Font("Consolas", 48, FontStyle.Bold | FontStyle.Italic);
+
+## Метод базовой точки
+Для сложных изображений, состоящих из нескольких элемент
+ов
+
+- Выбиратся базовая тчк изображения
+- Коо-рды остальных тчк остчитываются от базовой
+- Если коорды тчк изобр-я отчитывать от базовой в относитенльных единицах(dX, dY), а не в пикселах, то обеспеч возможность масштабирования изобр-я
