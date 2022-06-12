@@ -2,7 +2,7 @@
 
 Ссылочный тип, **определяющий набор методов и свойств, но не реализует их**. Затем этот функционал реализуют классы, которые применяют данные интерфейсы.
 
-Интерфейс представляет собой полностью абстрактный класс.
+Грубо говоря, интерфейс представляет собой полностью абстрактный класс.
 
 **Отличия интерфейса от абстрактного класса**:
 - методы интерфейса объявляются без модификатора доступа (по умолчанию public)
@@ -168,5 +168,24 @@ class Client : IAccount, IClient
     int sum;
     public int CurrentSum{ get {return sum; }}
     public string Name {get; set; }
+    public void Put(int sum)
+    {
+        this.su, += sum;
+    }
+    public void WithDraw(int sum)
+    {
+        if (this.sum >= sum)
+            this.sum -= sum;
+    }
+}
+```
+```
+class Program
+{
+    static void Main()
+    {
+        Client client = new Client("Tom", 200);
+        client.Put(30);
+    }
 }
 ```

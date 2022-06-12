@@ -179,3 +179,174 @@ class Program
         }
     }
 ```
+# Выборка с группировкой
+```
+static void Main()
+        {
+            string[] websites = { "A.com", "B.net", "C.net", "D.com", "F.org", "H.net", "M.tv", "G.tv" };
+            var webAdds =
+                from addr in websites
+                where addr.LastIndexOf(".") != -1
+                group addr by addr.Substring(addr.LastIndexOf("."));
+
+            foreach (var sites in webAdds)
+            {
+                Console.WriteLine($"Группировка по {sites.Key}");
+                foreach (var site in sites)
+                {
+                    Console.WriteLine($"    {site}");
+                }
+            }    
+            Console.ReadKey();
+        }
+```
+
+# Вложеннные запросы
+
+```
+static void Main()
+        {
+            // групы, имеющие не менее трех членов
+            string[] websites = { "A.com", "B.net", "C.net", "D.com", "F.org", "H.net", "M.tv", "G.tv" };
+            var webAdds =
+                from addr in websites
+                where addr.LastIndexOf(".") != -1
+                group addr by addr.Substring(addr.LastIndexOf("."))
+                into ws // каждая группа будет отождествляться с этой переменной. Ссылку на группу записываем в эту переменную
+                where ws.Count() < 3
+                select ws;
+            Console.WriteLine("Группы, имеющие менее трех членов");
+            foreach (var sites in webAdds)
+            {
+                Console.WriteLine($"Группировка по {sites.Key}");
+                foreach (var site in sites)
+                {
+                    Console.WriteLine($"    {site}");
+                }
+                Console.WriteLine();
+            }    
+            Console.ReadKey();
+        }
+```
+# Временная переменная в запросе
+```
+static void Main()
+        {
+            // групы, имеющие не менее трех членов
+            string[] strs = { "gamme", "alpha", "beta" };
+            // Создать запрос на получениеи в отсортированном порядке симолов из строк
+            var chrs =
+                from str in strs
+                let chrArray = str.ToCharArray()
+                from ch in chrArray
+                orderby ch
+                select ch;
+
+            Console.WriteLine("Отдельные символы, отсортированные по порядку    ");
+            foreach (char c in chrs)
+                Console.Write($"{c} ");
+            Console.ReadKey();
+        }
+```
+
+Оператор let может также использоваться для хранения неперечислимого зачения
+Доработка ранее рассмотренного примера
+
+Запрос для группировки адресов веб сайтов
+
+```
+static void Main()
+        {
+            // групы, имеющие не менее трех членов
+            string[] websites = { "A.com", "B.net", "C.net", "D.com", "F.org", "H.net", "M.tv", "G.tv" };
+            var webAdds =
+                from addr in websites
+                let idx = addr.LastIndexOf(".")
+                where idx != -1
+                group addr by addr.Substring(addr.LastIndexOf("."))
+                into ws // каждая группа будет отождествляться с этой переменной. Ссылку на группу записываем в эту переменную
+                where ws.Count() < 35
+                select ws;
+            Console.WriteLine("Группы, имеющие менее трех членов");
+            foreach (var sites in webAdds)
+            {
+                Console.WriteLine($"Группировка по {sites.Key}");
+                foreach (var site in sites)
+                {
+                    Console.WriteLine($"    {site}");
+                }
+                Console.WriteLine();
+            }
+            Console.ReadKey();
+        }
+```
+
+# Объединение двух последовательностей
+Оператор join, выступающий в роли фильтра, которые имеют общее значение
+
+Класс, связывающий наименование товара с его номеромм
+```
+class Item
+    {
+        public string Name { get; set; }
+        public int ItemNumber { get; set; }
+        public Item(string n, int inum)
+        {
+            Name = n;
+            ItemNumber = inum;
+        }
+    }
+    class InStockStatus // Связывает номер товара с наличием на сайте
+    {
+        public int ItemNumber { get; set; }
+        public bool InStock { get; set; }
+        public InStockStatus(int n, bool b)
+        {
+            ItemNumber = n;
+            InStock = b;
+        }
+    }
+    class Temp
+    {
+        public string Name { get; set; }
+        public bool InStock { get; set; }
+
+        public Temp(string n, bool b)
+        {
+            Name = n;
+            InStock = b;
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Item[] items =
+            {
+                new Item("Кусачки", 1241),
+                new Item("Тиски", 7895),
+                new Item("Пила", 64111),
+            };
+            InStockStatus[] statusList =
+            {
+                new InStockStatus(1241, false),
+                new InStockStatus(7895, true),
+                new InStockStatus(64111, true),
+            };
+            var InStockList =
+                from item in items
+                join entry in statusList
+                on item.ItemNumber equals entry.ItemNumber
+                select new Temp(item.Name, entry.InStock);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Товар\tНаличие");
+            foreach (Temp t in InStockList)
+            {
+                Console.WriteLine($"{t.Name}\t{t.InStock}");
+            }
+            Console.ReadKey();
+        }
+    }
+}
+```
