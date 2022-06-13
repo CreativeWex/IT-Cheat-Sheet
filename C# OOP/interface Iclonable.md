@@ -29,17 +29,7 @@ class Person: ICloneable
         static void Main()
         {
             Person p1 = new Person { Name = "Tom", Age = 23 };
-            Console.WriteLine($"\np1:{p1.Name}\t{p1.Age}");
             Person p2 = (Person)p1.Clone();
-            Console.WriteLine($"\np2:{p2.Name}\t{p2.Age}");
-
-            p1.Name = "Eve";
-            p1.Age = 31;
-            Console.WriteLine($"\np1:{p1.Name}\t{p1.Age}");
-            Console.WriteLine($"\np2:{p2.Name}\t{p2.Age}");
-
-
-            Console.ReadKey();
         }
     }
 ```

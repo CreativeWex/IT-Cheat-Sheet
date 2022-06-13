@@ -1,10 +1,16 @@
-### Содержание <br>
+# Содержание
 [1. Абстрактный класс](#T1) <br>
 [2. Основные понятия интерфейса](#T2) <br>
-[3. Реализация интерфейсов в базовых и производных классах.](#T3) <br>
+[3. Реализация интерфейсов в базовых и производных классах](#T3) <br>
 [4. Множественная реализация интерфейсов](#T4) <br>
+[5.1. Наследование интерфейсов](#T51) <br>
+[5.2. Изменение реализации интерфейсов в производных классах](#T52)<br>
+[6. Стандартные интерфейсы](#T6) <br>
+[7. Делегаты. Основные понятия](#T7) <br>
+[8. Использование методов экземпляра в качестве делегатов](#T7) <br>
 
-<a name="T1"></a>
+
+<hr><a name="T1"></a>
 
 # Абстрактный класс
 
@@ -102,6 +108,8 @@ class Driver : Person
     public override void Move() => Console.WriteLine("Шофер ведет машину"); //переопределили метод
 }
 ```
+<a name="T52"></a>
+
 **Изменение реализации интерфейсов** в произодных классах можно реализовать при помощи виртуальных/абстрактных методов
 
 ```C#
@@ -162,3 +170,235 @@ class Client : IAccount, IClient
     }
 }
 ```
+<a name="T51"></a>
+
+## Наследование интерфейсов
+
+```C#
+interface IAction
+{
+    void Move();
+}
+interface IRunAction : IAction
+{
+    void Run();
+}
+class BaseAction : IRunAction
+{
+    public void Move()
+    {
+        Console.WriteLine("Move");
+    }
+    public void Run()
+    {
+        Console.WriteLine("Run");
+    }
+}
+```
+При применении этого интерфейса класс `BaseAction` должен будет реализовать как методы и свойства интерфейса `IRunAction`, так и методы и свойства базового интерфейса `IAction`, если эти методы и свойства не имеют реализации по умолчанию.
+
+<a name="T6"></a><br>
+
+## Стандартные интерфейсы
+### IClonable - клонирование объектов
+
+>При присваивании одного экземпляра другому копируется ссылка, а не сам объект. При этом объекты, на которые указывают поля объекта, в свою очередь являющиеся ссылками, не копируются. Это называется **поверхностным клонированием**. Для создания полностью независимых объектов необходимо **глубокое копирование**, когда в памяти создается дубликат всего дерева объектов, то есть объектов, на которые ссылаются поля объекта, поля полей, и т.д.
+```C#
+public interface IClonable
+{
+    object Clone();
+}
+```
+Пример поверхностного клонирования
+```C#
+class Person: ICloneable
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Person()
+    {
+        Name = "";
+    }
+    public object Clone()
+    {
+        return new Person()
+        { Name = this.Name, Age = this.Age };
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        Person p1 = new Person { Name = "Tom", Age = 23 };
+        Person p2 = (Person)p1.Clone();
+    }
+}
+```
+Пример глубокого копирования, при котором клон не зависит от оригинала
+```C#
+class Company
+{
+    public string Name { get; set; }
+    public Company()
+    {
+        Name = "";
+    }
+}
+
+class Person: ICloneable
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Company Work { get; set; }
+    public Person()
+    {
+        Name = "";
+        Work = new Company();
+    }
+    // глубое копирование
+    public object Clone()
+    {
+        Company company = new Company() { Name = this.Work.Name }; // копируем наименование компании
+        Person p = new Person() { Name = this.Name, Age = this.Age, Work = company };
+        return p;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Person p1 = new Person { Name = "Tom", Age = 23, Work = new Company { Name = "Microsoft" } };
+        Console.WriteLine($"\np1:{p1.Name}\t{p1.Age}\t{p1.Work.Name}");
+        Person p2 = (Person)p1.Clone(); // Связь не сохраняется
+        Console.WriteLine($"\np1:{p1.Name}\t{p2.Age}\t{p2.Work.Name}");
+        p1.Name = "Eve";
+        p1.Age = 31;
+        p1.Work.Name = "Google";
+        Console.WriteLine($"\np1:{p1.Name}\t{p1.Age}\t{p1.Work.Name}");
+        Console.WriteLine($"\np1:{p2.Name}\t{p2.Age}\t{p2.Work.Name}");
+    }
+}
+```
+### IComparable - сравнивание объектов объектов
+> Предназначен для сравнения текущего объекта с объектом, на который передается в качестве параметра object o. Возвращает целое число (одно из значений):
+- Меньше нуля - текущий объект левее объекта, передающегося в качестве параметра.
+- Равно нулю - текущий объект равен объекту, передающемуся в качестве параметра.
+- Больше нуля - текущий объект левее объекта, передающегося в качестве параметра.
+
+```C#
+public interface IComparabe
+{
+    int CompareTo(object o);
+}
+```
+Пример
+```C#
+class Person : IComparable
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Person()
+    {
+        Name = "";
+    }
+    public int CompareTo(object? ob)
+    {
+        if (ob is Person p) // шаблон заявления
+            return this.Name.CompareTo(p?.Name);
+        else
+            throw new Exception("Невозможно сравнить объекты");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Person p1 = new Person { Name = "Bill", Age = 32 };
+        Person p2 = new Person { Name = "Tom", Age = 23 };
+        Person p3 = new Person { Name = "Eve", Age = 21 };
+        Person[] people = new Person[] { p1, p2, p3 };
+        Array.Sort(people);
+        foreach (Person p in people)
+            Console.WriteLine($"\n:{p.Name}\t{p.Age}");
+        Console.ReadKey();
+    }
+}        
+```
+## IComparer - сортировка объектов по раздичным критериям
+`Метод Compare()` предназначен для сравнения объектов о1 и о2.
+возвращает целое число:
+    *меньше нуля - значит, текущий объект должен находиться перед объектом, который передается в качестве параметра (о1 < o2)
+    *равен нулю - одинаковые
+    *больше нуля - значит, текущий объект должен находиться после объекта, который передается в качестве параметра (о1 > o2)
+```C#
+interface IComparer
+{
+    int Compare(object o1, object o2);
+}
+```
+Пример
+```C#
+class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    
+    public Person() 
+    {
+        Name = "";
+    }
+}
+
+class PeopleComparer : IComparer<Person>
+{
+    public int Compare(Person? p1, Person? p2)
+    {
+        if (p1?.Name.Length > p2?.Name.Length)
+            return 1;
+        else if (p1?.Name.Length < p2?.Name.Length)
+            return -1;
+        else
+            return 0;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Person p1 = new Person { Name = "Bill", Age = 34 };
+        Person p2 = new Person { Name = "Tom", Age = 23 };
+        Person p3 = new Person { Name = "Alice", Age = 21 };
+
+        Person[] people = new Person[] {p1, p2, p3};
+        Array.Sort(people, new PeopleComparer());
+
+        foreach (Person p in people)
+            Console.WriteLine($"{p.Name} \t{p.Age}");
+
+        Console.ReadKey();
+    }
+}
+```
+<br><hr><a name="T7"></a>
+
+# Делегаты
+
+**Делегаты** - указатели на методы, с помощью которых можно вызвать данные методы.
+```C#
+delegate Тип Название(Параметры);
+```
+**Основное преимущество делегтата**: возможность вызова метода, который будет определен во время выполнения работы программы, а не во время копилляции.
+
+>Делегат может указывать на любой метод, который принимает такие же парамеры(**!!! во внимание принимаются модификаторы ref и out**) и имеет такой же возвращаемый тип.
+
+Алгоритм применения делегата:
+1. Объявление делегата `delegate void Message();`
+2. Для использования делегата создается переменная этого делегата `Message mes;`
+3. В делегат передается адрес метода `mes = Hello;`
+4. Через делегат вызываем метод, на который он ссылается `mes();`
+<a name="T8"></a>
+
+## Использование методов экземпляра в качестве делегатов
