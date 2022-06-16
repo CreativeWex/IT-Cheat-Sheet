@@ -1,5 +1,6 @@
 # Содержание
 ## .NET
+[Перегрузка операторов](#operator_overload) <br>
 [1. Абстрактный класс](#T1) <br>
 [2. Основные понятия интерфейса](#T2) <br>
 [3. Реализация интерфейсов в базовых и производных классах](#T3) <br>
@@ -43,7 +44,77 @@
 ~~[29. Создание запроса LINQ с помощью метода запроса](#T29)~~ <br>
 ~~[30. Режимы выполнения запросов: отоженный и немедленный](#T30)~~ <br><br><br>
 
-<a name="T27.0"></a>
+<a name="operator_overload"></a>
+
+# Перегрузка операторов
+
+**Определение операторов** заключается в определении в классе, для объектов которого мы хотим определить оператор, специального метода:
+```C#
+public static возвращаемый_тип operator оператор(параметры)
+{  }
+```
+>Этот метод должен иметь модификаторы public static, так как перегружаемый оператор будет использоваться для всех объектов данного класса.
+
+Один из параметров должен предоставлять тот тип - класс или структуру, в котором определяется оператор.
+
+**Пример**
+```C#
+class Counter
+{
+    public int Value { get; set; }
+         
+    public static Counter operator +(Counter counter1, Counter counter2)
+    {
+        return new Counter { Value = counter1.Value + counter2.Value };
+    }
+    public static bool operator >(Counter counter1, Counter counter2)
+    {
+        return counter1.Value > counter2.Value;
+    }
+    public static bool operator <(Counter counter1, Counter counter2)
+    {
+        return counter1.Value < counter2.Value;
+    }
+}
+```
+Определить логику можно для следующих операторов:
+- унарные операторы `+x, -x, !x, ~x, ++, --, true, false`
+- бинарные операторы `+, -, *, /, %`
+- операции сравнения `==, !=, <, >, <=, >=`
+- поразрядные операторы `&, |, ^, <<, >>`
+- логические операторы `&&, ||`
+
+Парные операторы
+- `==` и `!=`
+- `<` и `>`
+- `<=` и `>=`
+
+## Определение инкремента и декремента
+```C#
+public static Counter operator ++(Counter counter1)
+{
+    return new Counter { Value = counter1.Value + 10 };
+}
+```
+## Определение true и false
+```C#
+class Counter
+{
+    public int Value { get; set; }
+     
+    public static bool operator true(Counter counter1)
+    {
+        return counter1.Value != 0;
+    }
+    public static bool operator false(Counter counter1)
+    {
+        return counter1.Value == 0;
+    }
+}
+```
+>Для использования операции отрицания, типа `if (!counter)`, необходимо определить для типа операцию `!`
+
+<br><a name="T27.0"></a>
 
 # Индексаторы
 Позволяют индексировать объекты и обращаться к данным по индексу (работать с объектами как с массивами).
@@ -713,3 +784,7 @@ public class Sports
     }
 }
 ```
+
+<hr><br><br><br><br>
+
+# LINQ
