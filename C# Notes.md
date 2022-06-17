@@ -27,15 +27,15 @@
 
 
 ## LINQ
-~~[12. Выборка данных с оператором where](#T12)~~ <br>
-~~[13. Выборка данных с сортировкой результатов с помощью orderby](#T13)~~ <br>
-~~[14. Выборка данных с преобразованием результатов отбора](#T14)~~ <br>
-~~[15. Выборка отдельных составных частей элементов источника данных](#T15)~~<br>
+[12. Выборка данных с оператором where](#T12) <br>
+[13. Выборка данных с сортировкой результатов с помощью orderby](#T13)<br>
+[14. Выборка данных с преобразованием результатов отбора](#T14) <br>
+[15. Выборка отдельных составных частей элементов источника данных](#T15)<br>
 
 ~~[16. Выборка с формированием последовательности объектов](#T16)~~ <br>
-~~[17. Выборка с группировкой данных](#T17)~~ <br>
-~~[18. Применение оператора into во вложенных запросах](#T18)~~ <br>
-~~[19. Применение оператора let для создания временной переменной в запросе](#T19)~~<br>
+[17. Выборка с группировкой данных](#T17) <br>
+[18. Применение оператора into во вложенных запросах](#T18) <br>
+[19. Применение оператора let для создания временной переменной в запросе](#T19)<br>
 ~~[20. Применение оператора let для хранения неперечислимого значения](#T20)~~ <br>
 ~~[21. Объединение двух последовательностей с помощью оператора join](#T21)~~
 
@@ -788,3 +788,145 @@ public class Sports
 <hr><br><br><br><br>
 
 # LINQ
+<a name="T12"></a>
+<a name="T13"></a>
+
+Запрос состоит из 3 шагов:
+1. Источник данных
+```C#
+int[] nums = new int[] {1, -2, 3, 0 -4 ,5};
+```
+2. Описание запроса
+```C#
+var posNums //Название переменной запроса
+from n in nums //источник запроса
+where n > 0 // where - установить условие
+where n < 100 // для нескольких условий
+orderby n //ascending - по возрастанию, descending - по убыванию
+// orderby Person.Name, Person.Age - несколько критериев
+select n; // маркер конца запроса
+```
+
+3. Выполнение запроса
+```C#
+foreach (var i in posNums)
+    Console.WriteLine($"{i} ");
+```
+<a name="T17"></a>
+<a name="T18"></a>
+
+## Выборка с группировкой
+
+```C#
+string[] web =  { "A.com", "B.net", "C.net", "D.com", "F.org", "H.net", "M.tv", "G.tv" };
+var query =
+    from i in web
+    let idx = addr.LastIndexOf(".");
+    where idx != -1
+    group i by query.Substring(idx) into ws // инто сохраняет ссылку на группу в переменную
+    select ws;
+
+foreach(var i in query)
+{
+    foreach(var j in i)
+    {
+        Console.WriteLine($"    {site}");
+    }
+    Console.WriteLine();
+}
+    
+```
+<a name="T14"></a>
+
+## Выборка с преобразованием результатов отбора
+```C#
+select n+1;
+select Math.Sqrt(n);
+```
+
+<a name="T15"></a>
+
+## Выборка отдельных составных частей элементов источника данных
+```C#
+class EmailAddress
+{
+    //класс, содержающий два свойства
+    public string Name { get; set; }
+    public string Address { get; set; }
+
+    public EmailAddress(string n, string a) { Name = n; Address = a; }
+}
+class Program
+{
+    static void Main()
+    {
+        EmailAddress[] addrs =
+        {
+            new EmailAddress("jack", "Jack@gamil.com"),
+            new EmailAddress("Tom", "Tom@gamil.com")
+        };
+
+        var eAddrs =
+        from entry in addrs
+        select entry.Address;
+
+        Console.WriteLine("Адреса электронной почты");
+        foreach (string s in eAddrs)
+            Console.WriteLine($"{s}");
+    }
+}
+```
+<a name="T16"></a>
+
+## Выборка с формированием последовательности объектов
+```C#
+class ContactInfo
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+
+    public ContactInfo(string n, string a, string p)
+    {
+        Name = n;
+        Email = a;
+        Phone = p;
+    }
+}
+
+class EmailAddress
+{
+    public string Name { get; set; }
+    public string Address { get; set; }
+
+    public EmailAddress(string n, string a)
+    {
+        Name = n;
+        Address = a;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        ContactInfo[] contacts =
+        {
+            new ContactInfo("Юля", "Julia@mail.ru", "562-42-92"),
+            new ContactInfo("Alex", "Alex@mail.ru", "562-42-92"),
+            new ContactInfo("Igor", "Igor@mail.ru", "562-42-92")
+        };
+
+        //запрос для формирования списка объектов EmailAddress
+        var emailList =
+        from entry in contacts
+        select new EmailAddress(entry.Name, entry.Email);
+
+        Console.WriteLine("Список адресов электронной почты");
+
+        //Выполнить запрос и вывести его результаты 
+        foreach (EmailAddress e in emailList)
+            Console.WriteLine($"{e.Name,-10}: {e.Address}");
+    }
+}
+```
