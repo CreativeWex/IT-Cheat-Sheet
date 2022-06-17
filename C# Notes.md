@@ -37,7 +37,7 @@
 [18. Применение оператора into во вложенных запросах](#T18) <br>
 [19. Применение оператора let для создания временной переменной в запросе](#T19)<br>
 ~~[20. Применение оператора let для хранения неперечислимого значения](#T20)~~ <br>
-~~[21. Объединение двух последовательностей с помощью оператора join](#T21)~~
+[21. Объединение двух последовательностей с помощью оператора join](#T21)
 
 ~~[23. Создание группового соединения с операторами into и join](#T23)~~ <br>
 ~~[28. Методы запроса LINQ](#T28)~~ <br>
@@ -813,7 +813,6 @@ foreach (var i in posNums)
     Console.WriteLine($"{i} ");
 ```
 <a name="T17"></a>
-<a name="T18"></a>
 
 ## Выборка с группировкой
 
@@ -834,7 +833,35 @@ foreach(var i in query)
     }
     Console.WriteLine();
 }
-    
+```
+<a name="T18"></a>
+
+# Вложеннные запросы
+
+```C#
+static void Main()
+{
+    // групы, имеющие не менее трех членов
+    string[] websites = { "A.com", "B.net", "C.net", "D.com", "F.org", "H.net", "M.tv", "G.tv" };
+    var webAdds =
+        from addr in websites
+        where addr.LastIndexOf(".") != -1
+        group addr by addr.Substring(addr.LastIndexOf("."))
+        into ws // каждая группа будет отождествляться с этой переменной. Ссылку на группу записываем в эту переменную
+        where ws.Count() < 3
+        select ws;
+    Console.WriteLine("Группы, имеющие менее трех членов");
+    foreach (var sites in webAdds)
+    {
+        Console.WriteLine($"Группировка по {sites.Key}");
+        foreach (var site in sites)
+        {
+            Console.WriteLine($"    {site}");
+        }
+        Console.WriteLine();
+    }    
+    Console.ReadKey();
+}
 ```
 <a name="T14"></a>
 
@@ -848,7 +875,7 @@ select Math.Sqrt(n);
 
 ## Выборка отдельных составных частей элементов источника данных
 ```C#
-class EmailAddress
+`class EmailAddress
 {
     //класс, содержающий два свойства
     public string Name { get; set; }
@@ -930,3 +957,135 @@ class Program
     }
 }
 ```
+<a name="T21"></a>
+
+## Объединение двух последовательностей
+Оператор join, выступающий в роли фильтра, которые имеют общее значение
+
+Класс, связывающий наименование товара с его номеромм
+```C#
+class Item
+{
+    public string Name { get; set; }
+    public int ItemNumber { get; set; }
+    public Item(string n, int inum)
+    {
+        Name = n;
+        ItemNumber = inum;
+    }
+}
+class InStockStatus // Связывает номер товара с наличием на сайте
+{
+    public int ItemNumber { get; set; }
+    public bool InStock { get; set; }
+    public InStockStatus(int n, bool b)
+    {
+        ItemNumber = n;
+        InStock = b;
+    }
+}
+
+class Temp
+{
+    public string Name { get; set; }
+    public bool InStock { get; set; }
+
+    public Temp(string n, bool b)
+    {
+        Name = n;
+        InStock = b;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Item[] items =
+        {
+            new Item("Кусачки", 1241),
+            new Item("Тиски", 7895),
+            new Item("Пила", 64111),
+        };
+        InStockStatus[] statusList =
+        {
+            new InStockStatus(1241, false),
+            new InStockStatus(7895, true),
+            new InStockStatus(64111, true),
+        };
+        var InStockList =
+            from item in items
+            join entry in statusList
+            on item.ItemNumber equals entry.ItemNumber
+            select new Temp(item.Name, entry.InStock);
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Товар\tНаличие");
+        foreach (Temp t in InStockList)
+        {
+            Console.WriteLine($"{t.Name}\t{t.InStock}");
+        }
+        Console.ReadKey();
+    }
+}
+```
+
+<a name="T23"></a>
+
+## Создание группового соединения с операторами into и join
+
+```C#
+class Transport
+{ 
+    public string Name { get; set; }
+    public string How { get; set; }
+    public Transport(string n, string h)
+    {
+        Name = n;
+        How = h;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        string[] travelTypes =
+        {
+            "Воздушный", "Морской", "Наземный", "Речной"
+        };
+        Transport[] transports =
+        {
+            new Transport("Велосипед", "Наземный"),
+            new Transport("Аэростат", "Воздушный"),
+            new Transport("Лодка", "Речной"),
+            new Transport("Самолет", "Воздушный"),
+            new Transport("Каноэ", "Речной"),
+            new Transport("Биплан", "Воздушный"),
+            new Transport("Автомашина", "Наземный"),
+            new Transport("Судно", "Морской"),
+            new Transport("Поезд", "Наземный"),
+        };
+        var byHow = from how in travelTypes // категории
+                    join trans in transports // объединене вид - категория
+                    on how equals trans.How
+                    into lst // формирование списка по категориям
+                    select new { How = how, Tlst = lst };
+        // join  - возвращает записи з двух таблиц, отвечающие условию on
+        // объект how из списка travelTypes
+        // соединяется с объектом trans из списка transport
+        // если знаечние how совпадает со значением свойства trans.How.
+        // Рехультатом объединения будет объект анонимного типа, содержащий два свойства
+
+        // выполнить апрос и отобразить результаты
+        foreach (var item in byHow)
+        {
+            Console.WriteLine($"{item.How} транспорт: ");
+            foreach (var m in item.Tlst)
+                Console.WriteLine("\t" + m.Name);
+            Console.WriteLine();
+        }
+    }
+}
+```
+
+
