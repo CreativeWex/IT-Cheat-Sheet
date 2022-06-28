@@ -1,0 +1,92 @@
+DROP TABLE IF EXISTS author CASCADE;
+CREATE TABLE IF NOT EXISTS author
+(
+	author_id   int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	name_author text
+);
+
+INSERT INTO author(name_author)
+VALUES ('Булгаков М.А.'),
+       ('Достоевский Ф.М.'),
+       ('Есенин С.А.'),
+       ('Пастернак Б.Л.'),
+       ('Толстой Л.Н.'),
+       ('Пушкин А.С.'),
+       ('Гоголь Ф.М.'),
+       ('Тургенев  И.С.'),
+       ('Лермонтов М.Ю.');
+
+DROP TABLE IF EXISTS genre CASCADE;
+CREATE TABLE IF NOT EXISTS genre
+(
+	genre_id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	name_genre TEXT
+);
+
+INSERT INTO genre(name_genre)
+VALUES ('Роман'),
+       ('Поэзия'),
+       ('Русская классика'),
+       ('Классическая проза'),
+       ('Приключения');
+
+DROP TABLE IF EXISTS book CASCADE;
+CREATE TABLE IF NOT EXISTS book
+(
+	book_id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	title     TEXT,
+	author_id INT NOT NULL,
+	genre_id  INT,
+	price     DECIMAL(8, 2),
+	amount    INT,
+	FOREIGN KEY (author_id) REFERENCES author (author_id) ON DELETE CASCADE,
+	FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE SET NULL
+);
+
+INSERT INTO book(title, author_id, genre_id, price, amount)
+VALUES ('Мастер и Маргарита', 1, 1, 670.99, 3),
+       ('Белая гвардия', 1, 1, 540.50, 5),
+       ('Идиот', 2, 1, 460.00, 10),
+       ('Братья Карамазовы', 2, 1, 799.01, 3),
+       ('Игрок', 2, 1, 480.50, 10),
+       ('Стихотворения и поэмы', 3, 2, 650.00, 15),
+       ('Черный человек', 3, 2, 570.20, 6),
+        ('Отцы и дети', 8, 3, 570.20, 6),
+        ('Дворянское гнездо', 8, 4, 570.20, 6),
+        ('Вешние воды', 8, 3, 570.20, 6),
+        ('Ася', 8, 3, 570.20, 6),
+        ('Накануне', 8, 4, 570.20, 6),
+       ('Лирика', 4, 2, 518.99, 2);
+
+
+DROP TABLE IF EXISTS sellers;
+CREATE TABLE IF NOT EXISTS sellers
+(
+	seller_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	name     TEXT
+);
+
+INSERT INTO sellers(name)
+VALUES ('Березнев Никита');
+
+DROP TABLE IF EXISTS supply;
+CREATE TABLE IF NOT EXISTS supply
+(
+	supply_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    seller_id INT,
+	title     text,
+	author    TEXT,
+	price     DECIMAL(8, 2),
+	amount    INT,
+    FOREIGN KEY (seller_id) REFERENCES sellers (seller_id) ON DELETE CASCADE
+);
+
+INSERT INTO supply(seller_id, title, author, price, amount)
+VALUES (1, 'Доктор Живаго', 'Пастернак Б.Л.', 380.80, 4),
+       (1, 'Черный человек', 'Есенин С.А.', 570.20, 6),
+       (1, 'Белая гвардия', 'Булгаков М.А.', 540.50, 7),
+       (1, 'Идиот', 'Достоевский Ф.М.', 360.80, 3),
+       (1, 'Стихотворения и поэмы', 'Лермонтов М.Ю.', 255.90, 4),
+       (1, 'Остров сокровищ', 'Стивенсон Р.Л.', 599.99, 5);
+
+       REVOKE ALL ON TABLE airports TO public;
